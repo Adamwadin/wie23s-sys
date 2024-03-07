@@ -12,10 +12,21 @@ let products: Product[] = [
     description: "A very nice bike",
     price: 1000,
     highestBid: 0,
+    bidtime: "2021-09-01",
     highestBidder: "",
     bids: [
-      { amount: 100, productId: "abc123", bidder: "Kalle" },
-      { amount: 200, productId: "abc123", bidder: "Pelle" },
+      {
+        amount: 100,
+        productId: "abc123",
+        bidder: "Kalle",
+        bidtime: "2021-09-01",
+      },
+      {
+        amount: 200,
+        productId: "abc123",
+        bidder: "Pelle",
+        bidtime: " 2021-09-01",
+      },
     ],
   },
   {
@@ -24,8 +35,22 @@ let products: Product[] = [
     description: "A very nice car",
     price: 50000,
     highestBid: 0,
+    bidtime: "2021-09-01",
     highestBidder: "",
-    bids: [],
+    bids: [
+      {
+        amount: 50500,
+        productId: "abc123",
+        bidder: "Kalle",
+        bidtime: "2021-09-01",
+      },
+      {
+        amount: 51000,
+        productId: "abc123",
+        bidder: "Pelle",
+        bidtime: " 2021-09-01",
+      },
+    ],
   },
 ];
 

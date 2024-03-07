@@ -9,6 +9,7 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product>();
   const [userName, setUserName] = useState("");
   const [currentBid, setCurrentBid] = useState(0);
+  const [bidDate, setBidDate] = useState<String>("");
 
   useEffect(() => {
     if (socket) return;
@@ -44,13 +45,25 @@ function App() {
     });
   };
 
+  const setDate = () => {
+    const date = new Date();
+    const localdate = date.toLocaleString();
+    setBidDate(localdate);
+    console.log(localdate);
+  };
+
   const makeBid = () => {
+    setDate();
     socket?.emit("make_bid", {
       amount: currentBid,
       productId: selectedProduct?.id,
       bidder: userName,
+      bidtime: bidDate,
     });
   };
+  const highestbid = selectedProduct?.bids.reduce((prev, current) =>
+    prev.amount > current.amount ? prev : current
+  );
 
   return (
     <>
@@ -67,29 +80,56 @@ function App() {
 
       {selectedProduct && (
         <>
-          <input
+          <input className="input"
             type="text"
             value={userName}
+            placeholder="Ange ditt namn"
             onChange={(e) => setUserName(e.target.value)}
           />
           <input
-            type="number"
+            className="input"
+            type="text"
             value={currentBid}
-            onChange={(e) => setCurrentBid(+e.target.value)}
+            onChange={(e) => setCurrentBid(Number(e.target.value))}
           />
-          <button onClick={makeBid}>Lägg bud</button>
+          <button
+            onClick={() => {
+              if (
+                selectedProduct &&
+                currentBid > highestbid?.amount &&
+                selectedProduct.price
+              ) {
+                makeBid();
+                
+              } else {
+                alert("Du måste lägga ett högre bud");
+              }
+            }}
+          >
+            Lägg bud
+          </button>
           <section>
             <div>
               <h3>{selectedProduct.name}</h3>
+              <p>{selectedProduct.price}:- Minsta accepterade pris</p>
               <ul>
-                {selectedProduct.bids.map((bid, i) => (
-                  <li key={i}>
-                    {bid.amount} - {bid.bidder}
-                  </li>
-                ))}
+                {selectedProduct.bids
+                  .sort((a, b) => b.amount - a.amount)
+                  .map((bid, i) => (
+                    <li key={i}>
+                      {bid.amount} - {bid.bidder} - {bid.bidtime}
+                    </li>
+                  ))}
               </ul>
             </div>
           </section>
+          <div>
+            <h3>Highest bid</h3>
+            <p>
+              {" "}
+              {highestbid?.bidder} - {highestbid?.amount}{" "}
+            </p>
+          </div>
         </>
       )}
     </>

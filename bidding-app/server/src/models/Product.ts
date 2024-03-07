@@ -5,6 +5,7 @@ export type Product = {
   name: string;
   description: string;
   price: number;
+  bidtime: string;
   highestBid: number;
   highestBidder: string;
   bids: Bid[];
